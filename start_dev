@@ -80,8 +80,4 @@ print_info "Start Elasticsearch ..."
 start_service "elasticsearch" $tmp_dir
 # start postgresql
 print_info "Start Postgresql ..."
-execute_cmd "open /Applications/Postgres.app"
-
-
-
-
+execute_cmd "open -g /Applications/Postgres.app"
