@@ -1,0 +1,87 @@
+#!/bin/sh
+# Author: Faizal Zakaria (fzakaria@codegarage.co)
+# Script to start the dev work for CodeGarage team
+# It will start:
+# - Redis (redis-server)
+# - Elasticsearch (elasticsearch)
+# - Postgresql (postgresql App, the blue elephant)
+
+##########################
+# COLOR
+##########################
+
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+GREEN="\033[1;32m"
+BLUE="\033[1;34m"
+END="\033[0m"
+
+# $1: color
+# $2: msg
+function print_color {
+  echo "${1}${2}${END}"
+}
+
+function print_seperator {
+  echo "\t\t${BLUE}---------------------------------------------${END}"
+}
+
+# $1: msg
+function print_error {
+  print_seperator
+  print_color $RED "\t\t${1}"
+  print_seperator
+}
+
+function print_info {
+  print_seperator
+  print_color $YELLOW "\t\t${1}"
+  print_seperator
+}
+
+function print_debug {
+  print_seperator
+  print_color $GREEN "\t\t${1}"
+  print_seperator
+}
+
+# $1: cmd
+function execute_cmd {
+  eval $1
+  if [ "$?" != "0" ]; then
+    print_error "Failed to execute the command, ${1}"
+    return
+  fi
+  print_debug "Successfully run ${1}"
+}
+
+# $1: service
+# $2: tmp dir
+function start_service {
+  local _service="${1}"
+  local _logfile="${2}/${_service}.log"
+  local _pidfile="${2}/${_service}.pid"
+  if [ -f $_pidfile ]; then
+    execute_cmd "kill $(cat ${_pidfile})"
+    sleep 1
+  fi
+  cmd="/bin/sh -c 'echo \$\$>${_pidfile} && exec ${_service} > ${_logfile} 2>&1' &"
+  execute_cmd "${cmd}"
+}
+
+# Create /tmp/start_dev for log files"
+tmp_dir="/tmp/start_dev"
+execute_cmd "mkdir -p ${tmp_dir}"
+# start redis
+print_info "Start Redis ..."
+start_service "redis-server" $tmp_dir
+# start elasticsearch
+print_info "Start Elasticsearch ..."
+start_service "elasticsearch" $tmp_dir
+# start postgresql
+print_info "Start Postgresql ..."
+execute_cmd "open /Applications/Postgres.app"
+
+
+
+
