@@ -81,3 +81,6 @@ start_service "elasticsearch" $tmp_dir
 # start postgresql
 print_info "Start Postgresql ..."
 execute_cmd "open -g /Applications/Postgres.app"
+# start mysqld_safe
+print_info "Start mysqld_safe"
+start_service "mysqld_safe" $tmp_dir

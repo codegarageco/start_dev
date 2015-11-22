@@ -5,6 +5,7 @@ It will start:
 - Redis (redis-server)
 - Elasticsearch (elasticsearch)
 - Postgresql (postgresql App, the blue elephant)
+- Mysql server (through msqld_safe)
 
 # HowTo
 
