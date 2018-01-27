@@ -56,7 +56,7 @@ function execute_cmd {
 }
 
 # $1: service
-# $2: tmp dir
+# $2: tmp dir, to store log & pid.
 function start_service {
   local _service="${1}"
   local _logfile="${2}/${_service}.log"
@@ -69,18 +69,40 @@ function start_service {
   execute_cmd "${cmd}"
 }
 
-# Create /tmp/start_dev for log files"
+
+################################
+# Create /tmp/start_dev for log files
+################################
 tmp_dir="/tmp/start_dev"
 execute_cmd "mkdir -p ${tmp_dir}"
+
+################################
 # start redis
+################################
 print_info "Start Redis ..."
 start_service "redis-server" $tmp_dir
+
+################################
 # start elasticsearch
+################################
 print_info "Start Elasticsearch ..."
 start_service "elasticsearch" $tmp_dir
+
+################################
 # start postgresql
+################################
 print_info "Start Postgresql ..."
 execute_cmd "open -g /Applications/Postgres.app"
+
+################################
 # start mysqld_safe
+################################
 print_info "Start mysqld_safe"
 start_service "mysqld_safe" $tmp_dir
+
+################################
+# start memcached
+################################
+print_info "Start memcached"
+start_service "memcached" $tmp_dir
+
